@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Pesan Anonim Makrab OSIS SMENSA - SMK Negeri 1 Banyumas</title>
+  <meta name="description" content="Platform pesan anonim resmi Makrab OSIS SMK Negeri 1 Banyumas periode 2025/2026. Kirim pesan, apresiasi, dan kesan rahasia dengan aman.">
+  <link rel="icon" type="image/png" href="/assets/logo-osis.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+  <script type="module" crossorigin src="/assets/index-BHM9IzyN.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CqWrABTZ.css">
+</head>
+<body>
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Audio Alert untuk Realtime -->
+  <audio id="sound-notification" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ==================================================== -->
+  <!-- SCREEN 1: GERBANG KEAMANAN PIN MAKRAB                -->
+  <!-- ==================================================== -->
+  <section id="screen-pin-gate" class="screen-view active-view" aria-label="Gerbang Keamanan PIN Makrab">
+    <div class="pin-gate-wrapper">
+      <div class="pin-card">
+        <!-- Logo OSIS Atas -->
+        <div class="pin-logo-header">
+          <img src="/assets/logo-osis.png" alt="Logo OSIS SMK Negeri 1 Banyumas" class="smensa-logo-badge">
+          <div class="pin-badge-text">
+            <span class="badge-title">OSIS SMENSA</span>
+            <span class="badge-subtitle">SMK Negeri 1 Banyumas</span>
+          </div>
+        </div>
+
+        <!-- Icon Kunci Biru (Sesuai Mockup) -->
+        <div class="pin-icon-circle" id="pin-icon-box">
+          <svg class="icon-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m21 2-2 2m-1.5 1.5L14 9a5 5 0 1 0-4 4l3.5-3.5"></path>
+            <circle cx="7.5" cy="16.5" r="2.5"></circle>
+            <path d="m15.5 7.5 2 2"></path>
+            <path d="m13.5 9.5 2 2"></path>
+          </svg>
+        </div>
+
+        <h1 class="pin-title">GERBANG KEAMANAN<br><span class="highlight-blue">PIN MAKRAB</span></h1>
+        <p class="pin-subtitle">Masukkan PIN Rahasia Makrab untuk membuka direktori!</p>
+
+        <form id="form-pin-gate" class="pin-form" onsubmit="return false;">
+          <div class="input-pin-group">
+            <input 
+              type="password" 
+              id="input-makrab-pin" 
+              class="input-pin-field" 
+              placeholder="••••" 
+              maxlength="8" 
+              inputmode="numeric" 
+              pattern="[0-9]*" 
+              autocomplete="off"
+              required
+              aria-label="Input PIN Makrab"
+            >
+            <button type="button" id="btn-toggle-pin-visibility" class="btn-eye-toggle" title="Lihat PIN">
+              <svg id="icon-eye-pin" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <div id="pin-error-msg" class="pin-error-msg" style="display: none;">
+            ⚠️ PIN salah! Silakan tanyakan panitia Makrab.
+          </div>
+
+          <button type="submit" id="btn-submit-pin" class="btn-primary btn-submit-pin">
+            <span>MASUK</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="pin-hint-card">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+          </svg>
+          <span>Petunjuk: PIN default adalah <b>2025</b></span>
+        </div>
+
+        <p class="pin-footer-text">Khusus Internal OSIS SMENSA 2025/2026</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================== -->
+  <!-- SCREEN 2: DIREKTORI PENGURUS OSIS (PUBLIK / KIRIM)   -->
+  <!-- ==================================================== -->
+  <section id="screen-directory" class="screen-view" aria-label="Direktori Pengurus OSIS">
+    <!-- Top App Bar -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="header-brand">
+          <img src="/assets/logo-osis.png" alt="Logo OSIS" class="header-logo">
+          <div class="header-titles">
+            <h2 class="header-title">DIREKTORI</h2>
+            <span class="header-subtitle">PENGURUS OSIS</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="btn-nav-login" class="btn-header-login" title="Login ke Inboks Pribadi">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span class="hide-mobile">Login Pengurus</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="directory-container">
+      <!-- Banner Sambutan & Info Makrab -->
+      <div class="makrab-welcome-banner">
+        <div class="welcome-text">
+          <h3>Malam Keakraban (Makrab) OSIS 💙</h3>
+          <p>Kirim pesan anonim ke rekan pengurus. Ungkapkan apresiasi, motivasi, atau kesan serumu secara rahasia!</p>
+        </div>
+        <div class="welcome-stats">
+          <span class="stat-item" id="total-members-badge">53 Pengurus</span>
+          <span class="stat-item stat-safe">100% Anonim</span>
+        </div>
+      </div>
+
+      <!-- Search & Filter Controls -->
+      <div class="search-filter-section">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input 
+            type="text" 
+            id="input-search-members" 
+            class="search-input" 
+            placeholder="Cari nama pengurus, jabatan, atau kelas..." 
+            aria-label="Cari pengurus OSIS"
+          >
+          <button id="btn-clear-search" class="btn-clear-search" style="display: none;" title="Hapus pencarian">×</button>
+        </div>
+
+        <!-- Sie Filter Chips (Scrollable Horizontal) -->
+        <div class="sie-filter-scroll" id="sie-filter-tabs" role="tablist" aria-label="Filter Departemen">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Members Grid (2 Kolom di Mobile, Sesuai Mockup!) -->
+      <div id="members-grid" class="members-grid" aria-live="polite">
+        <!-- Members Cards generated by JS -->
+      </div>
+
+      <!-- Empty State jika pencarian tidak ditemukan -->
+      <div id="directory-empty-state" class="empty-state" style="display: none;">
+        <div class="empty-icon">🔍</div>
+        <h4>Pengurus Tidak Ditemukan</h4>
+        <p>Coba kata kunci pencarian lain atau pilih kategori Semua.</p>
+        <button id="btn-reset-filters" class="btn-secondary">Reset Pencarian</button>
+      </div>
+    </main>
+
+    <!-- Floating Bottom Bar untuk Akses Cepat Login Pengurus -->
+    <div class="floating-login-dock">
+      <button id="btn-floating-login" class="btn-dock-login">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>LOGIN PENGURUS</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ==================================================== -->
+  <!-- MODAL / SCREEN 3: FORM KIRIM PESAN ANONIM (MIRIP NGL) -->
+  <!-- ==================================================== -->
+  <div id="modal-send-message" class="modal-backdrop" style="display: none;" aria-modal="true" role="dialog">
+    <div class="modal-card send-message-card">
+      <button id="btn-close-send-modal" class="btn-close-modal" aria-label="Tutup form">&times;</button>
+      
+      <!-- Profil Target Penerima -->
+      <div class="recipient-profile-header">
+        <div class="recipient-avatar-circle" id="modal-recipient-avatar">
+          <!-- Avatar Icon -->
+        </div>
+        <div class="recipient-info">
+          <span class="send-to-label">Kirim Pesan Anonim Ke:</span>
+          <h3 id="modal-recipient-name" class="recipient-name">Bayu Aji Prasetya</h3>
+          <span id="modal-recipient-tag" class="recipient-tag">Ketua Umum • XI TJKT 1</span>
+        </div>
+      </div>
+
+      <!-- Anonymous Guarantee Badge -->
+      <div class="safe-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+        </svg>
+        <span>100% Rahasia & Anonim. Penerima tidak tahu siapa kamu!</span>
+      </div>
+
+      <!-- Form Kirim -->
+      <form id="form-send-anonymous" class="send-message-form" onsubmit="return false;">
+        <input type="hidden" id="input-recipient-id">
+
+        <div class="textarea-container">
+          <textarea 
+            id="input-message-content" 
+            class="message-textarea" 
+            rows="5" 
+            maxlength="500" 
+            placeholder="Tulis pesan rahasia, kesan, saran, atau pujian buat dia di sini... 🤫"
+            required
+            aria-label="Isi pesan anonim"
+          ></textarea>
+          <div class="textarea-footer">
+            <span class="textarea-hint">Jaga kesantunan & etika yaa! ✨</span>
+            <span id="char-counter" class="char-counter">0 / 500</span>
+          </div>
+        </div>
+
+        <!-- Quick Prompts / Inspiration Chips -->
+        <div class="quick-prompts-wrapper">
+          <span class="quick-title">Inspirasi cepat:</span>
+          <div class="quick-chips">
+            <button type="button" class="chip-prompt" data-prompt="Keren banget kinerjamu di OSIS selama ini! Pertahankan yaa 💪">💪 Kinerja keren!</button>
+            <button type="button" class="chip-prompt" data-prompt="Terima kasih selalu sabar dan ngebantu pas rapat & proker 🙏">🙏 Makasih bantuannya</button>
+            <button type="button" class="chip-prompt" data-prompt="Semangat terus yaa! Jangan lupa jaga kesehatan di sela-sela kesibukan 🌟">🌟 Semangat Makrab!</button>
+            <button type="button" class="chip-prompt" data-prompt="Ada ide seru nih buat pensi nanti, sukses selalu buat Sie kamu! 🔥">🔥 Sukses selalu</button>
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" id="btn-cancel-send" class="btn-secondary">Batal</button>
+          <button type="submit" id="btn-confirm-send" class="btn-primary btn-send-now">
+            <span>KIRIM PESAN ANONIM</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Sukses Kirim (Pesan TIDAK ditampilkan di publik) -->
+  <div id="modal-success-sent" class="modal-backdrop" style="display: none;" aria-modal="true" role="dialog">
+    <div class="modal-card success-card">
+      <div class="success-icon-circle">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#0284C7" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h3>Pesan Anonim Berhasil Terkirim! 🚀</h3>
+      <p id="success-target-text">Pesanmu sudah aman masuk ke inboks rahasia pengurus.</p>
+      <div class="success-alert-box">
+        🔒 <b>Privasi Terjaga:</b> Isi pesan hanya dapat dibaca oleh pemilik inboks setelah login!
+      </div>
+      <button id="btn-close-success" class="btn-primary btn-full">Kirim Pesan Lainnya</button>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- SCREEN 4: LOGIN PENGURUS (AUTENTIKASI PERSONAL)       -->
+  <!-- ==================================================== -->
+  <section id="screen-login" class="screen-view" aria-label="Login Pengurus OSIS" style="display: none;">
+    <div class="login-wrapper">
+      <div class="login-card">
+        <!-- Tombol Kembali ke Direktori -->
+        <button id="btn-back-to-directory" class="btn-back-nav" title="Kembali ke Direktori">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Kembali</span>
+        </button>
+
+        <!-- Icon Gembok Biru (Sesuai Mockup) -->
+        <div class="login-icon-circle">
+          <svg class="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+
+        <h1 class="login-title">LOGIN PENGURUS</h1>
+        <p class="login-subtitle">Buka dan baca inboks pesan anonim pribadimu</p>
+
+        <form id="form-login-pengurus" class="login-form" onsubmit="return false;">
+          <!-- Input Username (Nama / Kelas) dengan Search Dropdown -->
+          <div class="form-group">
+            <label for="login-member-select" class="form-label">USERNAME (NAMA/KELAS)</label>
+            <div class="select-wrapper">
+              <select id="login-member-select" class="form-select" required aria-label="Pilih Nama Pengurus">
+                <option value="" disabled selected>-- Pilih Namamu dari Daftar --</option>
+                <!-- Populated by JS -->
+              </select>
+            </div>
+            <span class="field-help">Pilih namamu sesuai struktur kepengurusan OSIS</span>
+          </div>
+
+          <!-- Input PIN / Password Pribadi -->
+          <div class="form-group">
+            <label for="input-login-password" class="form-label">PIN PRIBADI</label>
+            <div class="input-password-wrapper">
+              <span class="input-prefix-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </span>
+              <input 
+                type="password" 
+                id="input-login-password" 
+                class="form-input with-prefix with-suffix" 
+                placeholder="Masukkan PIN pribadi..." 
+                required
+                autocomplete="current-password"
+                aria-label="Input Password Pribadi"
+              >
+              <button type="button" id="btn-toggle-login-pass" class="btn-eye-toggle" title="Tampilkan sandi">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <span class="field-help">Password default: <b>osis2025</b> (atau gunakan PIN <b>2025</b>)</span>
+          </div>
+
+          <div id="login-error-msg" class="login-error-box" style="display: none;">
+            ⚠️ Nama atau password tidak cocok. Silakan coba lagi!
+          </div>
+
+          <button type="submit" id="btn-submit-login" class="btn-primary btn-submit-login">
+            <span>MASUK INBOKS</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+
+        <p class="login-footer-text">OSIS SMK Negeri 1 Banyumas Periode 2025/2026</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================== -->
+  <!-- SCREEN 5: INBOKS PRIBADI (PRIVATE DASHBOARD)          -->
+  <!-- ==================================================== -->
+  <section id="screen-inbox" class="screen-view" aria-label="Inboks Pesan Pribadi" style="display: none;">
+    <!-- Inbox Header (Sesuai Mockup) -->
+    <header class="inbox-header">
+      <div class="inbox-header-inner">
+        <button id="btn-inbox-back" class="btn-header-back" title="Kembali ke Direktori">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
+        <div class="inbox-title-container">
+          <h2 class="inbox-title">INBOKS PESAN ANDA</h2>
+          <span id="inbox-member-name-badge" class="inbox-name-badge">[BAYU AJI PRASETYA]</span>
+        </div>
+
+        <div class="inbox-header-tools">
+          <div class="unread-bell-box" title="Jumlah pesan belum dibaca">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span id="unread-count-badge" class="bell-badge">0</span>
+          </div>
+          <button id="btn-logout-inbox" class="btn-logout" title="Keluar dari Akun">Keluar</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="inbox-main-container">
+      <!-- Unread Status Bar (Sesuai Mockup: '2 UNREAD') -->
+      <div class="inbox-status-bar">
+        <span id="inbox-unread-text" class="unread-pill">0 UNREAD</span>
+        <div class="realtime-status-pill">
+          <span class="live-dot"></span>
+          <span>Realtime Aktif</span>
+        </div>
+      </div>
+
+      <!-- Daftar Pesan Anonim (Sesuai Mockup: chat bubble / cards) -->
+      <div id="inbox-messages-list" class="messages-list-wrapper">
+        <!-- Messages loaded here -->
+      </div>
+
+      <!-- Empty State jika belum ada pesan -->
+      <div id="inbox-empty-state" class="inbox-empty-state" style="display: none;">
+        <div class="empty-inbox-icon">📬</div>
+        <h4>Belum Ada Pesan Masuk</h4>
+        <p>Inboksmu masih kosong. Pesan anonim dari rekan-rekan Makrab akan langsung muncul di sini secara real-time!</p>
+        <button id="btn-inbox-share-link" class="btn-secondary">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+          <span>Ajak Teman Kirim Pesan</span>
+        </button>
+      </div>
+
+      <!-- Action Card: "Screenshot / Bagikan Kartu Pesan" (Sesuai Mockup) -->
+      <div class="share-card-container">
+        <button id="btn-open-share-card" class="btn-share-gradient" title="Buat kartu estetik untuk dibagikan">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+            <circle cx="9" cy="9" r="2"/>
+            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+          </svg>
+          <span>Screenshot / Bagikan Kartu Pesan</span>
+        </button>
+
+        <!-- Preview Sticky Note Estetik (Sesuai Mockup) -->
+        <div class="aesthetic-note-preview" id="note-preview-trigger">
+          <div class="note-tape"></div>
+          <div class="note-content">
+            <h4 class="note-title">MAKRAB<br>OSIS SMENSA</h4>
+            <p id="note-preview-recipient" class="note-for">UNTUK: BAYU</p>
+            <p id="note-preview-quote" class="note-sample-text">"Pilih pesan di atas untuk dijadikan kartu estetik!"</p>
+            <div class="note-icon-download">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="realtime-footer-note">Pesan akan muncul di sini secara real-time!</p>
+      </div>
+    </main>
+  </section>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: KARTU PESAN ESTETIK UNTUK SCREENSHOT / SHARE   -->
+  <!-- ==================================================== -->
+  <div id="modal-share-card" class="modal-backdrop" style="display: none;" aria-modal="true" role="dialog">
+    <div class="modal-card share-card-modal">
+      <button id="btn-close-share-modal" class="btn-close-modal" aria-label="Tutup">&times;</button>
+      <h3 class="share-modal-title">Kartu Pesan Makrab Estetik 📸</h3>
+      <p class="share-modal-subtitle">Pilih tema dan unduh gambar untuk diunggah ke Story WhatsApp / Instagram!</p>
+
+      <!-- Selector Pesan yang akan dicetak -->
+      <div class="share-select-group">
+        <label for="select-message-to-share" class="form-label">PILIH PESAN:</label>
+        <select id="select-message-to-share" class="form-select">
+          <!-- Populated by JS -->
+        </select>
+      </div>
+
+      <!-- Area Capture Kartu (Diexport via html2canvas) -->
+      <div class="capture-card-outer">
+        <div id="capture-target-card" class="aesthetic-story-card theme-classic-blue">
+          <!-- Selotip Makrab -->
+          <div class="story-card-tape"></div>
+
+          <!-- Logo & Event Header -->
+          <div class="story-card-header">
+            <img src="/assets/logo-osis.png" alt="Logo" class="story-card-logo">
+            <div class="story-card-meta">
+              <span class="story-event-name">MAKRAB OSIS SMENSA</span>
+              <span class="story-school-name">SMK NEGERI 1 BANYUMAS • 2025/2026</span>
+            </div>
+          </div>
+
+          <!-- Recipient Badge -->
+          <div class="story-recipient-badge">
+            <span class="badge-label">UNTUK:</span>
+            <span id="story-recipient-name" class="badge-name">BAYU AJI PRASETYA</span>
+          </div>
+
+          <!-- Pesan Anonim Utama -->
+          <div class="story-card-body">
+            <div class="quote-mark">“</div>
+            <p id="story-message-content" class="story-quote-text">
+              Keren banget kinerjamu di OSIS selama ini! Pertahankan yaa 💪
+            </p>
+            <div class="quote-mark end-quote">”</div>
+          </div>
+
+          <!-- Footer Kartu -->
+          <div class="story-card-footer">
+            <div class="anon-sender-tag">
+              <span class="lock-dot">🔒</span>
+              <span>Pesan Anonim Terverifikasi</span>
+            </div>
+            <span id="story-card-date" class="story-card-date">18 Sep 2025</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="share-actions-row">
+        <button id="btn-download-card-png" class="btn-primary btn-share-action">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Unduh Gambar (PNG)</span>
+        </button>
+
+        <button id="btn-copy-message-text" class="btn-secondary btn-share-action">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          <span>Salin Teks</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vite Entrypoint Script -->
+</body>
+</html>
