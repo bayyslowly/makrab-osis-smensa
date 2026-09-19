@@ -186,6 +186,35 @@ export function subscribeToMessages(memberId, onNewMessage) {
   }
 }
 
+// 7. Update Password / PIN Pengurus
+export async function updateMemberPassword(memberId, newPassword) {
+  if (!newPassword || newPassword.length < 4) {
+    throw new Error('Password baru minimal 4 karakter!');
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('members')
+      .update({ password: newPassword })
+      .eq('id', memberId)
+      .select();
+
+    if (error) throw error;
+
+    // Update penyimpanan lokal cadangan
+    updateLocalMemberPassword(memberId, newPassword);
+
+    return { success: true, data: data?.[0] };
+  } catch (err) {
+    console.warn('Supabase update password error, memperbarui penyimpanan lokal:', err);
+    const localUpdated = updateLocalMemberPassword(memberId, newPassword);
+    if (!localUpdated && err) {
+      throw err;
+    }
+    return { success: true, fallback: true };
+  }
+}
+
 // ==========================================
 // LOCAL STORAGE RESILIENCE HELPERS
 // Menjamin aplikasi 100% dapat dicoba langsung
@@ -241,4 +270,15 @@ function deleteLocalMessage(messageId) {
   const all = JSON.parse(localStorage.getItem('smensa_messages') || '[]');
   const filtered = all.filter(m => m.id !== messageId);
   localStorage.setItem('smensa_messages', JSON.stringify(filtered));
+}
+
+function updateLocalMemberPassword(memberId, newPassword) {
+  const all = JSON.parse(localStorage.getItem('smensa_members') || '[]');
+  const idx = all.findIndex(m => m.id === memberId);
+  if (idx !== -1) {
+    all[idx].password = newPassword;
+    localStorage.setItem('smensa_members', JSON.stringify(all));
+    return true;
+  }
+  return false;
 }

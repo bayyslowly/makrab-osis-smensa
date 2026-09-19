@@ -1263,6 +1263,193 @@ button {
   background: #FECACA;
 }
 
+.btn-change-password {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-light);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-change-password:hover {
+  background: #BAE6FD;
+  border-color: var(--primary-sky);
+  transform: translateY(-1px);
+}
+
+/* Profile Card Pengurus Aktif di Inboks */
+.inbox-profile-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.inbox-profile-card:hover {
+  box-shadow: var(--shadow-card);
+  border-color: rgba(2, 132, 199, 0.25);
+}
+
+.inbox-profile-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.inbox-profile-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.inbox-profile-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.inbox-profile-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.inbox-profile-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--primary-blue);
+  background: var(--accent-soft);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.inbox-dept-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.inbox-profile-fullname {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--primary-navy);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-profile-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-profile-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-navy);
+  background: #F1F5F9;
+  border: 1px solid var(--border-light);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-profile-action:hover {
+  background: var(--accent-light);
+  color: var(--primary-blue);
+  border-color: var(--primary-sky);
+}
+
+/* Modal Ganti Password */
+.change-password-card {
+  max-width: 420px;
+}
+
+.change-pass-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.change-pass-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.change-pass-title {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: var(--primary-navy);
+  line-height: 1.2;
+}
+
+.change-pass-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.change-pass-user-badge {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-light);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.user-badge-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.user-badge-name {
+  color: var(--primary-navy);
+  font-weight: 800;
+}
+
 /* Inbox Main Content */
 .inbox-main-container {
   max-width: 600px;
@@ -1855,5 +2042,17 @@ button {
   .btn-send-anon {
     font-size: 0.68rem;
     padding: 7px 6px;
+  }
+  .inbox-profile-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .btn-profile-action {
+    justify-content: center;
+    width: 100%;
+  }
+  .btn-change-password {
+    padding: 4px 6px;
   }
 }

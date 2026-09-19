@@ -12,8 +12,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 
-  <script type="module" crossorigin src="/assets/index-BHM9IzyN.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CqWrABTZ.css">
+  <script type="module" crossorigin src="/assets/index-CUNfDImB.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DpcAdjbT.css">
 </head>
 <body>
   <!-- Toast Notification Container -->
@@ -385,12 +385,45 @@
             </svg>
             <span id="unread-count-badge" class="bell-badge">0</span>
           </div>
+          <button id="btn-open-change-password" class="btn-change-password" title="Ganti Password / PIN Pengurus">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 2l-2 2m-1.5 1.5L14 9a5 5 0 1 0-4 4l3.5-3.5"></path>
+              <circle cx="7.5" cy="16.5" r="2.5"></circle>
+              <path d="M15.5 7.5l2 2"></path>
+              <path d="M13.5 9.5l2 2"></path>
+            </svg>
+            <span class="hide-mobile">Ganti PIN</span>
+          </button>
           <button id="btn-logout-inbox" class="btn-logout" title="Keluar dari Akun">Keluar</button>
         </div>
       </div>
     </header>
 
     <main class="inbox-main-container">
+      <!-- Profile Card Pengurus Aktif -->
+      <div class="inbox-profile-card">
+        <div class="inbox-profile-left">
+          <div class="inbox-profile-avatar" id="inbox-profile-avatar">
+            <!-- Avatar SVG -->
+          </div>
+          <div class="inbox-profile-details">
+            <div class="inbox-profile-badge-row">
+              <span class="inbox-profile-tag">PENGURUS AKTIF</span>
+              <span id="inbox-profile-dept-badge" class="inbox-dept-tag">Pengurus Inti</span>
+            </div>
+            <h3 id="inbox-profile-fullname" class="inbox-profile-fullname">Bayu Aji Prasetya</h3>
+            <p id="inbox-profile-meta" class="inbox-profile-meta">Ketua Umum • XI TJKT 1</p>
+          </div>
+        </div>
+        <button type="button" id="btn-profile-change-password" class="btn-profile-action" title="Ganti Password / PIN">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>Ganti Password</span>
+        </button>
+      </div>
+
       <!-- Unread Status Bar (Sesuai Mockup: '2 UNREAD') -->
       <div class="inbox-status-bar">
         <span id="inbox-unread-text" class="unread-pill">0 UNREAD</span>
@@ -532,6 +565,142 @@
           <span>Salin Teks</span>
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: GANTI PASSWORD / PIN PENGURUS                 -->
+  <!-- ==================================================== -->
+  <div id="modal-change-password" class="modal-backdrop" style="display: none;" aria-modal="true" role="dialog" aria-labelledby="change-pass-title">
+    <div class="modal-card change-password-card">
+      <button type="button" id="btn-close-change-pass-modal" class="btn-close-modal" aria-label="Tutup popup">&times;</button>
+      
+      <!-- Header Modal -->
+      <div class="change-pass-header">
+        <div class="change-pass-icon-circle">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#0284C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2l-2 2m-1.5 1.5L14 9a5 5 0 1 0-4 4l3.5-3.5"></path>
+            <circle cx="7.5" cy="16.5" r="2.5"></circle>
+            <path d="M15.5 7.5l2 2"></path>
+            <path d="M13.5 9.5l2 2"></path>
+          </svg>
+        </div>
+        <div class="change-pass-header-info">
+          <h3 id="change-pass-title" class="change-pass-title">Ganti Password / PIN</h3>
+          <p class="change-pass-subtitle">Amankan akun inboks pribadimu dengan PIN baru.</p>
+        </div>
+      </div>
+
+      <!-- Info Pengurus Yang Sedang Login -->
+      <div class="change-pass-user-badge">
+        <span class="user-badge-label">Akun Pengurus:</span>
+        <span id="change-pass-target-user" class="user-badge-name">[PENGURUS]</span>
+      </div>
+
+      <!-- Form Ganti Password -->
+      <form id="form-change-password" class="change-password-form" onsubmit="return false;">
+        <!-- Input 1: Password Saat Ini -->
+        <div class="form-group">
+          <label for="input-current-pass" class="form-label">PASSWORD / PIN SAAT INI</label>
+          <div class="input-password-wrapper">
+            <span class="input-prefix-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input 
+              type="password" 
+              id="input-current-pass" 
+              class="form-input with-prefix with-suffix" 
+              placeholder="Masukkan password saat ini..." 
+              required
+              autocomplete="current-password"
+              aria-label="Password Saat Ini"
+            >
+            <button type="button" id="btn-toggle-current-pass" class="btn-eye-toggle" title="Lihat/Sembunyikan sandi">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Input 2: Password Baru -->
+        <div class="form-group">
+          <label for="input-new-pass" class="form-label">PASSWORD / PIN BARU</label>
+          <div class="input-password-wrapper">
+            <span class="input-prefix-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m21 2-2 2m-1.5 1.5L14 9a5 5 0 1 0-4 4l3.5-3.5"></path>
+                <circle cx="7.5" cy="16.5" r="2.5"></circle>
+              </svg>
+            </span>
+            <input 
+              type="password" 
+              id="input-new-pass" 
+              class="form-input with-prefix with-suffix" 
+              placeholder="Minimal 4 karakter..." 
+              required
+              minlength="4"
+              autocomplete="new-password"
+              aria-label="Password Baru"
+            >
+            <button type="button" id="btn-toggle-new-pass" class="btn-eye-toggle" title="Lihat/Sembunyikan sandi">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <span class="field-help">Minimal panjang password adalah 4 karakter</span>
+        </div>
+
+        <!-- Input 3: Konfirmasi Password Baru -->
+        <div class="form-group">
+          <label for="input-confirm-pass" class="form-label">KONFIRMASI PASSWORD BARU</label>
+          <div class="input-password-wrapper">
+            <span class="input-prefix-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <input 
+              type="password" 
+              id="input-confirm-pass" 
+              class="form-input with-prefix with-suffix" 
+              placeholder="Ulangi password baru..." 
+              required
+              minlength="4"
+              autocomplete="new-password"
+              aria-label="Konfirmasi Password Baru"
+            >
+            <button type="button" id="btn-toggle-confirm-pass" class="btn-eye-toggle" title="Lihat/Sembunyikan sandi">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error Alert Message -->
+        <div id="change-pass-error-msg" class="login-error-box" style="display: none;">
+          ⚠️ Password tidak cocok. Silakan coba lagi!
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="modal-buttons" style="margin-top: 20px;">
+          <button type="button" id="btn-cancel-change-pass" class="btn-secondary">Batal</button>
+          <button type="submit" id="btn-submit-change-pass" class="btn-primary" style="flex: 1;">
+            <span>Simpan Password Baru</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

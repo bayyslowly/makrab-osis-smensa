@@ -6,7 +6,8 @@ import {
   getMessagesForMember, 
   toggleMessageReadStatus, 
   deleteMessage, 
-  subscribeToMessages 
+  subscribeToMessages,
+  updateMemberPassword
 } from './supabase.js';
 import { DEPARTMENTS } from './data/members.js';
 
@@ -40,7 +41,8 @@ const screens = {
 const modals = {
   send: document.getElementById('modal-send-message'),
   success: document.getElementById('modal-success-sent'),
-  share: document.getElementById('modal-share-card')
+  share: document.getElementById('modal-share-card'),
+  changePassword: document.getElementById('modal-change-password')
 };
 
 // ==========================================
@@ -53,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSearchAndFilter();
   initLoginForm();
   initInboxActions();
+  initChangePasswordModal();
   initShareCard();
 
   // Muat data anggota
@@ -518,11 +521,11 @@ function initLoginForm() {
       const selectedMember = state.members.find(m => m.id === memberId);
       if (!selectedMember) return;
 
-      // Cek password (menerima password anggota, default 'osis2025', atau '2025')
+      // Cek password aktif akun (default 'osis2025' / '2025' hanya berlaku jika belum pernah ganti password)
+      const activePassword = selectedMember.password || 'osis2025';
       const isValid = 
-        enteredPassword === selectedMember.password ||
-        enteredPassword === 'osis2025' ||
-        enteredPassword === '2025';
+        enteredPassword === activePassword ||
+        (activePassword === 'osis2025' && enteredPassword === '2025');
 
       if (isValid) {
         errorBox.style.display = 'none';
@@ -584,6 +587,27 @@ async function loadInboxMessages() {
   const nameBadge = document.getElementById('inbox-member-name-badge');
   if (nameBadge) {
     nameBadge.textContent = `[${state.currentUser.name.toUpperCase()}]`;
+  }
+
+  // Update Profile Card Pengurus Aktif
+  const profileAvatar = document.getElementById('inbox-profile-avatar');
+  const profileName = document.getElementById('inbox-profile-fullname');
+  const profileMeta = document.getElementById('inbox-profile-meta');
+  const profileDept = document.getElementById('inbox-profile-dept-badge');
+
+  if (profileName) profileName.textContent = state.currentUser.name;
+  if (profileMeta) profileMeta.textContent = `${state.currentUser.position} • ${state.currentUser.class}`;
+  if (profileDept) profileDept.textContent = state.currentUser.department;
+  if (profileAvatar) {
+    profileAvatar.innerHTML = state.currentUser.gender === 'male'
+      ? `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0284C7" stroke-width="2">
+           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+           <circle cx="12" cy="7" r="4"></circle>
+         </svg>`
+      : `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0284C7" stroke-width="2">
+           <path d="M12 2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z"></path>
+           <path d="M18 21a6 6 0 0 0-12 0"></path>
+         </svg>`;
   }
 
   // Update Preview Sticky Note di Bawah
@@ -765,6 +789,208 @@ function renderInboxMessages() {
 
     container.appendChild(bubble);
   });
+}
+
+// ==========================================
+// 5B. MODAL GANTI PASSWORD / PIN PENGURUS
+// ==========================================
+function openChangePasswordModal() {
+  if (!state.currentUser) {
+    showToast('Silakan login terlebih dahulu!', 'error');
+    return;
+  }
+
+  const modal = modals.changePassword;
+  if (!modal) return;
+
+  const targetUserName = document.getElementById('change-pass-target-user');
+  if (targetUserName) {
+    targetUserName.textContent = `${state.currentUser.name} (${state.currentUser.class})`;
+  }
+
+  // Reset form inputs & error
+  const form = document.getElementById('form-change-password');
+  if (form) form.reset();
+
+  const errorBox = document.getElementById('change-pass-error-msg');
+  if (errorBox) {
+    errorBox.style.display = 'none';
+    errorBox.textContent = '';
+  }
+
+  // Kembalikan tipe input ke password
+  ['input-current-pass', 'input-new-pass', 'input-confirm-pass'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('type', 'password');
+  });
+
+  modal.style.display = 'flex';
+  const currentPassInput = document.getElementById('input-current-pass');
+  if (currentPassInput) currentPassInput.focus();
+}
+
+function closeChangePasswordModal() {
+  if (modals.changePassword) {
+    modals.changePassword.style.display = 'none';
+  }
+}
+
+function initChangePasswordModal() {
+  const btnOpenHeader = document.getElementById('btn-open-change-password');
+  const btnOpenProfile = document.getElementById('btn-profile-change-password');
+  const btnCloseModal = document.getElementById('btn-close-change-pass-modal');
+  const btnCancel = document.getElementById('btn-cancel-change-pass');
+  const form = document.getElementById('form-change-password');
+  const errorBox = document.getElementById('change-pass-error-msg');
+  const btnSubmit = document.getElementById('btn-submit-change-pass');
+
+  // Trigger buka modal
+  if (btnOpenHeader) btnOpenHeader.addEventListener('click', openChangePasswordModal);
+  if (btnOpenProfile) btnOpenProfile.addEventListener('click', openChangePasswordModal);
+
+  // Trigger tutup modal
+  if (btnCloseModal) btnCloseModal.addEventListener('click', closeChangePasswordModal);
+  if (btnCancel) btnCancel.addEventListener('click', closeChangePasswordModal);
+
+  // Tutup jika klik backdrop
+  if (modals.changePassword) {
+    modals.changePassword.addEventListener('click', (e) => {
+      if (e.target === modals.changePassword) {
+        closeChangePasswordModal();
+      }
+    });
+  }
+
+  // Setup tombol toggle lihat password (mata)
+  const setupEyeToggle = (btnId, inputId) => {
+    const btn = document.getElementById(btnId);
+    const input = document.getElementById(inputId);
+    if (btn && input) {
+      btn.addEventListener('click', () => {
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+      });
+    }
+  };
+
+  setupEyeToggle('btn-toggle-current-pass', 'input-current-pass');
+  setupEyeToggle('btn-toggle-new-pass', 'input-new-pass');
+  setupEyeToggle('btn-toggle-confirm-pass', 'input-confirm-pass');
+
+  // Submit form ganti password
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!state.currentUser) {
+        showToast('Sesi login tidak ditemukan. Silakan login kembali.', 'error');
+        return;
+      }
+
+      const inputCurrent = document.getElementById('input-current-pass');
+      const inputNew = document.getElementById('input-new-pass');
+      const inputConfirm = document.getElementById('input-confirm-pass');
+
+      const currentPass = inputCurrent ? inputCurrent.value.trim() : '';
+      const newPass = inputNew ? inputNew.value.trim() : '';
+      const confirmPass = inputConfirm ? inputConfirm.value.trim() : '';
+
+      const showError = (msg) => {
+        if (errorBox) {
+          errorBox.textContent = `⚠️ ${msg}`;
+          errorBox.style.display = 'block';
+        }
+      };
+
+      if (errorBox) errorBox.style.display = 'none';
+
+      // 1. Validasi Password Saat Ini
+      const expectedPass = state.currentUser.password || 'osis2025';
+      const isCurrentValid = currentPass === expectedPass || (expectedPass === 'osis2025' && currentPass === '2025');
+
+      if (!isCurrentValid) {
+        showError('Password saat ini salah! Pastikan memasukkan sandi aktif akunmu.');
+        if (inputCurrent) {
+          inputCurrent.focus();
+          inputCurrent.classList.add('error');
+          setTimeout(() => inputCurrent.classList.remove('error'), 1500);
+        }
+        return;
+      }
+
+      // 2. Validasi Panjang Password Baru (minimal 4 karakter)
+      if (newPass.length < 4) {
+        showError('Password baru minimal harus 4 karakter!');
+        if (inputNew) inputNew.focus();
+        return;
+      }
+
+      // 3. Validasi Kesamaan Password Baru dan Konfirmasi
+      if (newPass !== confirmPass) {
+        showError('Password baru dan konfirmasi password tidak cocok!');
+        if (inputConfirm) {
+          inputConfirm.focus();
+          inputConfirm.classList.add('error');
+          setTimeout(() => inputConfirm.classList.remove('error'), 1500);
+        }
+        return;
+      }
+
+      // 4. Validasi password baru tidak boleh sama persis dengan yang lama
+      if (newPass === currentPass) {
+        showError('Password baru tidak boleh sama dengan password saat ini!');
+        if (inputNew) inputNew.focus();
+        return;
+      }
+
+      // Loading state pada tombol submit
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<span>Menyimpan...</span>`;
+      }
+
+      try {
+        // UPDATE ke Supabase
+        await updateMemberPassword(state.currentUser.id, newPass);
+
+        // Update state lokal & session
+        state.currentUser.password = newPass;
+        sessionStorage.setItem('smensa_current_user', JSON.stringify(state.currentUser));
+
+        // Update di daftar state.members
+        const memberIdx = state.members.findIndex(m => m.id === state.currentUser.id);
+        if (memberIdx !== -1) {
+          state.members[memberIdx].password = newPass;
+        }
+
+        // Tampilkan notifikasi toast sukses
+        showToast('Password / PIN berhasil diperbarui! 🔒', 'success');
+
+        // Confetti perayaan
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7 }
+        });
+
+        // Tutup modal secara otomatis
+        closeChangePasswordModal();
+      } catch (err) {
+        console.error('Gagal memperbarui password:', err);
+        showError(err.message || 'Gagal menyimpan password ke server. Silakan coba lagi.');
+        showToast('Gagal memperbarui password.', 'error');
+      } finally {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = `
+            <span>Simpan Password Baru</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          `;
+        }
+      }
+    });
+  }
 }
 
 // ==========================================
